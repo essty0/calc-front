@@ -1,4 +1,7 @@
+import React from "react";
 import {useForm} from "react-hook-form";
+import axios from "axios";
+import {toast} from "react-toastify";
 
 type CarInputs = {
     _id?: string;
@@ -6,7 +9,13 @@ type CarInputs = {
     speed?: number;
 }
 
-const AddEditCarForm = (car: CarInputs = {}) => {
+interface AddEditCarFormProps {
+    car: CarInputs;
+    onClose: () => void;
+    onRefetch: () => void;
+}
+
+const AddEditCarForm: React.FC<AddEditCarFormProps> = ({car, onClose, onRefetch}) => {
 
     const {
         register,
@@ -16,18 +25,24 @@ const AddEditCarForm = (car: CarInputs = {}) => {
     } = useForm<CarInputs>();
 
     const onSubmit = async(data: any) => {
-        /*await addTourMutation({
-            variables: {
-                tourInput: {
-                    language: data.language,
-                    title: data.tourLabel,
-                    maxClients: parseInt(data.maxClients),
-                    price: parseInt(data.price),
-                    availability: data.availability === "yes",
-                    reservationCode: data.reservationCode,
+        try {
+            const res = (car?.model?.length && car?._id)
+                ? await axios.post(`${process.env.BACK_URL}/api/car/edit`,
+                    {_id: car?._id, model: data.model, speed: Number(data.speed)}) // update request
+                : await axios.post(`${process.env.BACK_URL}/api/car/create`,
+                {model: data.model, speed: Number(data.speed)}) // add new car request
+
+            if (res.data) {
+                toast.success(`${car?.model?.length ? "Edited " : "Added"} successfully !`);
+                onRefetch();
+                onClose();
                 }
-            }
-        })*/
+            else toast.info("Errors during saving !");
+
+        } catch (error: any) {
+            const message = error.response?.data?.message || error.message || "An error occurred";
+            toast.error(`Error: ${message}`);
+        }
     }
 
     return (<div className="p-10">
@@ -56,7 +71,7 @@ const AddEditCarForm = (car: CarInputs = {}) => {
             <div className="flex flex-col">
                 <label htmlFor="speed" className="font-black">Speed</label>
                 <input
-                    defaultValue={car.speed}
+                    defaultValue={car.speed ? car.speed : undefined}
                     {...register("speed",
                     { required: "This field is required",
                         min: { value: 0, message: "Speed must be positive" },
