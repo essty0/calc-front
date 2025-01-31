@@ -8,6 +8,13 @@ import AppModal from "@/app/modals/AppModal";
 import AddEditCarForm from "@/app/forms/addEditCarForm";
 import DistanceForm from "@/app/forms/DistanceForm";
 
+type Car = {
+    _id: string;
+    model?: string;
+    speed?: number;
+}
+
+
 export default function Home() {
     const [carsArray, setCarsArray] = useState([]);
 
@@ -20,8 +27,12 @@ export default function Home() {
         try {
             const response = await axios.get(`${process.env.BACK_URL}/api/car/car-list`);
             setCarsArray(response.data);
-        } catch (e) {
-
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message);
+            } else {
+                console.log("An unknown error occurred");
+            }
         }
     }
 
@@ -32,8 +43,8 @@ export default function Home() {
 
   // Edit car
   const editCarHandler = (id: string) => {
-        const getActiveCar = carsArray.find((el:any) => el._id === id);
-        if (getActiveCar) {
+        const getActiveCar = carsArray.find((el: Car) => el._id === id);
+        if (!!getActiveCar) {
             setActiveCar(getActiveCar);
             addCarHandler();
         }
@@ -45,13 +56,16 @@ export default function Home() {
             const result = await axios.post(`${process.env.BACK_URL}/api/car/delete`,
                 {_id: id}
             );
-            result.data ? toast.success("Deleted !") : toast.info("Not deleted !");
-            await getCarList();
-        } catch (error: any) {
-            const message = error.response?.data?.message || error.message || "An error occurred";
-            toast.error(`Error: ${message}`);
+            if (!!result.data) toast.success("Deleted !")
+            else toast.info("Not deleted !");
+            await getCarList(); // update car list
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                toast.error(e.message);
+            } else {
+                console.log("An unknown error occurred");
+            }
         }
-
     }
 
   //close modal
@@ -79,7 +93,7 @@ export default function Home() {
                 </button>
                 <h2>{!carsArray.length && "No cars added yet"}</h2>
                 <div className="h-96 overflow-y-scroll w-full">
-                    {!!carsArray.length && carsArray.map((car: any) => (
+                    {!!carsArray.length && carsArray.map((car: Car) => (
                         <div key={car._id} className="w-full mb-10">
                             <div className="text-4xl">{car.model}</div>
                             <div className="mt-1 mb-2"> speed: {car.speed}km/h</div>
@@ -94,7 +108,7 @@ export default function Home() {
                     ))}
                 </div>
 
-                {addCarModal && <AppModal isOpen={addCarModal} onClose={closeModalHandler} className={""} >
+                {addCarModal && <AppModal isOpen={addCarModal} onClose={closeModalHandler}>
                     {<AddEditCarForm
                         car={{speed:activeCar.speed, model: activeCar.model, _id:activeCar._id}}
                         onClose={() => setAddCarModal(false)}
