@@ -1,4 +1,3 @@
-/*
 require('dotenv').config()
 
 module.exports = {
@@ -7,16 +6,4 @@ module.exports = {
     },
     output: "export",
     reactStrictMode: true,
-    swcMinify: true,
 }
-*/
-
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-    env: {
-        BACK_URL: process.env.BACK_URL
-    },
-};
-
-export default nextConfig;
