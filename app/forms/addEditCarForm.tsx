@@ -1,5 +1,5 @@
 import React from "react";
-import {useForm} from "react-hook-form";
+import {SubmitHandler, useForm} from "react-hook-form";
 import axios from "axios";
 import {toast} from "react-toastify";
 
@@ -15,16 +15,22 @@ interface AddEditCarFormProps {
     onRefetch: () => void;
 }
 
+type FormValues = {
+    _id?: string;
+    model?: string;
+    speed?: number;
+};
+
+
 const AddEditCarForm: React.FC<AddEditCarFormProps> = ({car, onClose, onRefetch}) => {
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
     } = useForm<CarInputs>();
 
-    const onSubmit = async(data: any) => {
+    const onSubmit: SubmitHandler<FormValues> = async(data) => {
         try {
             const res = (car?.model?.length && car?._id)
                 ? await axios.post(`${process.env.BACK_URL}/api/car/edit`,
@@ -39,9 +45,12 @@ const AddEditCarForm: React.FC<AddEditCarFormProps> = ({car, onClose, onRefetch}
                 }
             else toast.info("Errors during saving !");
 
-        } catch (error: any) {
-            const message = error.response?.data?.message || error.message || "An error occurred";
-            toast.error(`Error: ${message}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                toast.error(e.message);
+            } else {
+                console.log("An unknown error occurred");
+            }
         }
     }
 

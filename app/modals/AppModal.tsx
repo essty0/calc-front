@@ -23,13 +23,11 @@ interface AppModalProps {
     children: React.ReactNode;
     isOpen: boolean;
     onClose: () => void;
-    className: string | null;
 }
 
-const AppModal: React.FC<AppModalProps> = ({ children, isOpen, onClose, className = null }) => {
+const AppModal: React.FC<AppModalProps> = ({ children, isOpen, onClose }) => {
     return (
         <ReactModal
-            //className="overflow-visible"
             ariaHideApp={false}
             isOpen={isOpen}
             onRequestClose={onClose}

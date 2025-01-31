@@ -1,14 +1,18 @@
-import {useForm} from "react-hook-form";
 import React, {useState} from "react";
+import {SubmitHandler, useForm} from "react-hook-form";
 import {toast} from "react-toastify";
 import axios from "axios";
 import moment from "moment";
 
-type Input = {
+type DistanceFormProps = {
     carId: string;
-}
+};
 
-const DistanceForm: React.FC<Input> = ({carId = ""}) => {
+type FormValues = {
+    distance?: number;
+};
+
+const DistanceForm: React.FC<DistanceFormProps> = ({carId = ""}) => {
     const [isFocused, setIsFocused] = useState(false);
     const [timeArray, setTimeArray] = useState(0);
 
@@ -16,19 +20,21 @@ const DistanceForm: React.FC<Input> = ({carId = ""}) => {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
     } = useForm();
 
-    const onSubmit = async(data: any) => {
+    const onSubmit: SubmitHandler<FormValues> = async(data) => {
         try {
             const result = await axios.post(`${process.env.BACK_URL}/api/car/calc`,
                 {_id: carId, distance: Number(data.distance)}
             );
             //toast(result.data);
             setTimeArray(result.data);
-        } catch (error: any) {
-            const message = error.response?.data?.message || error.message || "An error occurred";
-            toast.error(`Error: ${message}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                toast.error(e.message);
+            } else {
+                console.log("An unknown error occurred");
+            }
         }
     }
 
@@ -39,6 +45,7 @@ const DistanceForm: React.FC<Input> = ({carId = ""}) => {
         else if (timeArray >= 86400) return `${sec.asDays().toFixed(1)}days`; // return as days
         else return `${sec.asSeconds().toFixed(1)}sec`; // return as seconds
     }
+
 
     return <div>
         <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4">
