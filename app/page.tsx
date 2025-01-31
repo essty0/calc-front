@@ -81,7 +81,7 @@ export default function Home() {
     }, []);
 
   return (
-    <>
+    <div>
         <div className="max-w-4xl mx-auto p-10">
             <header>
                 <h1 className="text-center text-5xl font-bold my-10">Car speed calculation</h1>
@@ -96,7 +96,7 @@ export default function Home() {
                     {!!carsArray.length && carsArray.map((car: Car) => (
                         <div key={car._id} className="w-full mb-10">
                             <div className="text-4xl">{car.model}</div>
-                            <div className="mt-1 mb-2"> speed: {car.speed}km/h</div>
+                            <div className="mt-1 mb-2"> speed: {car.speed}kmh</div>
                             <div>
                                 <span className="font-bold cursor-pointer hover:underline" onClick={() => editCarHandler(car._id)}>Edit</span>
                                 <span className="font-bold cursor-pointer hover:underline ml-5 text-red-800" onClick={() => deleteCarHandler(car._id)}>Delete</span>
@@ -118,6 +118,6 @@ export default function Home() {
             </main>
             <ToastContainer />
         </div>
-    </>
+    </div>
   );
 }
