@@ -25,9 +25,10 @@ const DistanceForm: React.FC<DistanceFormProps> = ({carId = ""}) => {
     const onSubmit: SubmitHandler<FormValues> = async(data) => {
         try {
             const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/car/calc`,
-                {_id: carId, distance: Number(data.distance)}
+                {_id: carId, distance: Number(data.distance)}, {headers: {
+                        'Content-Type': 'application/json',
+                    }}
             );
-            //toast(result.data);
             setTimeArray(result.data);
         } catch (e: unknown) {
             if (e instanceof Error) {
