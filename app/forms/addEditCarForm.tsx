@@ -33,9 +33,9 @@ const AddEditCarForm: React.FC<AddEditCarFormProps> = ({car, onClose, onRefetch}
     const onSubmit: SubmitHandler<FormValues> = async(data) => {
         try {
             const res = (car?.model?.length && car?._id)
-                ? await axios.post(`${process.env.BACK_URL}/api/car/edit`,
+                ? await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/car/edit`,
                     {_id: car?._id, model: data.model, speed: Number(data.speed)}) // update request
-                : await axios.post(`${process.env.BACK_URL}/api/car/create`,
+                : await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/car/create`,
                 {model: data.model, speed: Number(data.speed)}) // add new car request
 
             if (res.data) {

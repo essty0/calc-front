@@ -25,7 +25,7 @@ export default function Home() {
   // Get car list
     const   getCarList = async () => {
         try {
-            const response = await axios.get(`${process.env.BACK_URL}/api/car/car-list`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/car/car-list`);
             setCarsArray(response.data);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -53,7 +53,7 @@ export default function Home() {
   // Delete car
     const deleteCarHandler = async (id: string) => {
         try {
-            const result = await axios.post(`${process.env.BACK_URL}/api/car/delete`,
+            const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/car/delete`,
                 {_id: id}
             );
             if (!!result.data) toast.success("Deleted !")
