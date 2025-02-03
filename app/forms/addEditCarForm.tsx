@@ -34,9 +34,13 @@ const AddEditCarForm: React.FC<AddEditCarFormProps> = ({car, onClose, onRefetch}
         try {
             const res = (car?.model?.length && car?._id)
                 ? await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/car/edit`,
-                    {_id: car?._id, model: data.model, speed: Number(data.speed)}) // update request
+                    {_id: car?._id, model: data.model, speed: Number(data.speed)}, {headers: {
+                            'Content-Type': 'application/json',
+                        }}) // update request
                 : await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/car/create`,
-                {model: data.model, speed: Number(data.speed)}) // add new car request
+                {model: data.model, speed: Number(data.speed)}, {headers: {
+                            'Content-Type': 'application/json',
+                        }}) // add new car request
 
             if (res.data) {
                 toast.success(`${car?.model?.length ? "Edited " : "Added"} successfully !`);

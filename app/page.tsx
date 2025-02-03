@@ -54,7 +54,11 @@ export default function Home() {
     const deleteCarHandler = async (id: string) => {
         try {
             const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/car/delete`,
-                {_id: id}
+                {_id: id},
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }},
             );
             if (!!result.data) toast.success("Deleted !")
             else toast.info("Not deleted !");
