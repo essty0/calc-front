@@ -24,7 +24,7 @@ const DistanceForm: React.FC<DistanceFormProps> = ({carId = ""}) => {
 
     const onSubmit: SubmitHandler<FormValues> = async(data) => {
         try {
-            const result = await axios.post(`${process.env.BACK_URL}/api/car/calc`,
+            const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/car/calc`,
                 {_id: carId, distance: Number(data.distance)}
             );
             //toast(result.data);
@@ -53,7 +53,7 @@ const DistanceForm: React.FC<DistanceFormProps> = ({carId = ""}) => {
                 {...register("distance",
                     { required: "This field is required",
                         min: { value: 0, message: "Distance must be positive" },
-                        max: { value: 40075696, message: "Maximum шы 40 075 696km" },
+                        max: { value: 40075696, message: "Maximum is 40 075 696km" },
                     })}
                 type="number"
                 className="border-b-2 border-gray-700 px-2 mt-2 w-32 text-center focus:outline-0 focus:border-t-0"
@@ -65,7 +65,7 @@ const DistanceForm: React.FC<DistanceFormProps> = ({carId = ""}) => {
             />
             <span className="self-end">km</span>
             <button
-                className="pointer-events-auto rounded-md bg-blue-950 px-3 py-2 text-[0.8125rem]/5 font-semibold text-white hover:bg-blue-800">Count
+                className="pointer-events-auto rounded-md bg-blue-950 px-3 py-2 text-[0.8125rem]/5 font-semibold text-white hover:bg-blue-800">Count time
             </button>
             <span className="self-end">
                 {timeArray && getTime()}

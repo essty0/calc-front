@@ -25,7 +25,7 @@ export default function Home() {
   // Get car list
     const   getCarList = async () => {
         try {
-            const response = await axios.get(`${process.env.BACK_URL}/api/car/car-list`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/car/car-list`);
             setCarsArray(response.data);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -53,7 +53,7 @@ export default function Home() {
   // Delete car
     const deleteCarHandler = async (id: string) => {
         try {
-            const result = await axios.post(`${process.env.BACK_URL}/api/car/delete`,
+            const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/car/delete`,
                 {_id: id}
             );
             if (!!result.data) toast.success("Deleted !")
@@ -81,7 +81,7 @@ export default function Home() {
     }, []);
 
   return (
-    <>
+    <div>
         <div className="max-w-4xl mx-auto p-10">
             <header>
                 <h1 className="text-center text-5xl font-bold my-10">Car speed calculation</h1>
@@ -96,7 +96,7 @@ export default function Home() {
                     {!!carsArray.length && carsArray.map((car: Car) => (
                         <div key={car._id} className="w-full mb-10">
                             <div className="text-4xl">{car.model}</div>
-                            <div className="mt-1 mb-2"> speed: {car.speed}km/h</div>
+                            <div className="mt-1 mb-2"> speed: {car.speed}kmh</div>
                             <div>
                                 <span className="font-bold cursor-pointer hover:underline" onClick={() => editCarHandler(car._id)}>Edit</span>
                                 <span className="font-bold cursor-pointer hover:underline ml-5 text-red-800" onClick={() => deleteCarHandler(car._id)}>Delete</span>
@@ -118,6 +118,6 @@ export default function Home() {
             </main>
             <ToastContainer />
         </div>
-    </>
+    </div>
   );
 }
